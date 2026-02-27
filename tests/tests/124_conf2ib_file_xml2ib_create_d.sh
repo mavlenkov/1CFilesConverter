@@ -11,7 +11,7 @@
 TEST_NAME="Conf XML -> create file infobase (designer)"
 TEST_OUT_PATH="${OUT_PATH}/$(basename "${BASH_SOURCE[0]}" .sh)"
 TEST_OUT_PATH="${TEST_OUT_PATH// /_}"
-TEST_CHECK_PATH="${TEST_OUT_PATH}/1cv8.1cd"
+TEST_CHECK_PATH="${TEST_OUT_PATH}/1Cv8.1CD"
 export V8_CONVERT_TOOL=designer
 
 echo "==="

@@ -11,7 +11,7 @@
 TEST_NAME="Prepare test infobase..."
 TEST_OUT_PATH="${TEST_IB}"
 TEST_OUT_PATH="${TEST_OUT_PATH// /_}"
-TEST_CHECK_PATH="${TEST_OUT_PATH}/1cv8.1cd"
+TEST_CHECK_PATH="${TEST_OUT_PATH}/1Cv8.1CD"
 
 echo "==="
 echo "Prepare ${TEST_COUNT}. ($(basename "$0" .sh)) ${TEST_NAME}"
