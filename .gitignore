@@ -1,3 +1,4 @@
 .vscode/*.*
 out/
 tests/.env
+.claude/settings.local.json
