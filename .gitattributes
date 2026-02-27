@@ -1,5 +1,6 @@
 *.bsl eol=crlf
 *.bat eol=crlf
+*.cmd eol=crlf
 *.sh eol=lf
 *.json eol=crlf
 *.xml eol=crlf
