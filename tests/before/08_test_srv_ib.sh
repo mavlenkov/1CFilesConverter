@@ -12,7 +12,7 @@ TEST_NAME="Prepare test server infobase..."
 TEST_OUT_PATH="${TEST_IB}"
 TEST_OUT_PATH="${TEST_OUT_PATH// /_}"
 TEST_CHECK_PATH=""
-V8_PATH="/opt/1cv8/x86_64/${V8_VERSION}/bin"
+V8_PATH="/opt/1cv8/x86_64/${V8_VERSION}"
 IBCMD_TOOL="${V8_PATH}/ibcmd"
 RAC_TOOL="${V8_PATH}/rac"
 

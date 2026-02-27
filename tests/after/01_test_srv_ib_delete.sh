@@ -82,7 +82,7 @@ echo "[INFO] Killing RAS service"
 pids_ras_after=$(pgrep -f "ras " 2>/dev/null || true)
 for pid in ${pids_ras_after}; do
     is_new=1
-    for old_pid in ${pids_ras}; do
+    for old_pid in ${pids_ras_before}; do
         if [[ "${pid}" == "${old_pid}" ]]; then
             is_new=0
             break
@@ -99,7 +99,7 @@ echo "[INFO] Killing 1C:Enterprise Server agent"
 pids_ragent_after=$(pgrep -f "ragent" 2>/dev/null || true)
 for pid in ${pids_ragent_after}; do
     is_new=1
-    for old_pid in ${pids_ragent}; do
+    for old_pid in ${pids_ragent_before}; do
         if [[ "${pid}" == "${old_pid}" ]]; then
             is_new=0
             break

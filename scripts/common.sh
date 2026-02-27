@@ -320,9 +320,10 @@ run_update_db() {
         "${IBCMD_TOOL}" infobase config apply "${ibcmd_args[@]}"
     fi
 
-    if [[ $? -ne 0 ]]; then
+    local update_rc=$?
+    if [[ ${update_rc} -ne 0 ]]; then
         echo "[ERROR] Failed to update database configuration!"
-        return $?
+        return ${update_rc}
     fi
     echo "[INFO] Database configuration updated successfully."
     return 0

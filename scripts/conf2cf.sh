@@ -59,8 +59,8 @@ if [[ -d "${V8_SRC_PATH}/DT-INF" ]]; then
 
     echo "[INFO] Export \"${V8_SRC_PATH}\" to 1C:Designer XML format \"${XML_PATH}\"..."
     run_edt_export "${V8_SRC_PATH}" "${XML_PATH}"
-    if [[ $? -ne 0 ]]; then
-        ERROR_CODE=$?
+    ERROR_CODE=$?
+    if [[ ${ERROR_CODE} -ne 0 ]]; then
         cleanup_and_exit
     fi
     NEED_XML=1
@@ -115,8 +115,8 @@ if [[ "${NEED_XML}" == "1" ]]; then
         echo "[INFO] Creating infobase \"${IB_PATH}\" with configuration from XML-files \"${XML_PATH}\"..."
         "${IBCMD_TOOL}" infobase create --data="${IBCMD_DATA}" --db-path="${IB_PATH}" --create-database --import="${XML_PATH}"
     fi
-    if [[ $? -ne 0 ]]; then
-        ERROR_CODE=$?
+    ERROR_CODE=$?
+    if [[ ${ERROR_CODE} -ne 0 ]]; then
         cleanup_and_exit
     fi
     NEED_IB=1

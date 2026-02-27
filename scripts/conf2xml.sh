@@ -65,8 +65,8 @@ if [[ "${SRC_EXT,,}" == ".cf" ]]; then
             "${IBCMD_TOOL}" infobase create --data="${IBCMD_DATA}" --db-path="${IB_PATH}" --create-database --load="${V8_SRC_PATH}"
         fi
     fi
-    if [[ $? -ne 0 ]]; then
-        ERROR_CODE=$?
+    ERROR_CODE=$?
+    if [[ ${ERROR_CODE} -ne 0 ]]; then
         cleanup_and_exit
     fi
     NEED_IB=1

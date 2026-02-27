@@ -17,7 +17,7 @@ echo "==="
 echo "Test ${TEST_COUNT}. ($(basename "${BASH_SOURCE[0]}" .sh)) ${TEST_NAME}"
 echo "==="
 
-V8_BASE_CONFIG="${FIXTURES_PATH}/bin/1cv8.cf"
+export V8_BASE_CONFIG="${FIXTURES_PATH}/bin/1cv8.cf"
 
 mkdir -p "${TEST_OUT_PATH}/src"
 mkdir -p "${TEST_OUT_PATH}/ext"

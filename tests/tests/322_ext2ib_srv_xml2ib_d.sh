@@ -66,7 +66,14 @@ echo "[INFO] Creating temporary infobase \"${V8_SRV_ADDR}:${V8_SRV_REG_PORT}/${T
 
 echo "[INFO] Dropping temporary database \"${V8_DB_SRV_ADDR}/${TMP_IB_NAME}\""
 
-PGPASSWORD="${V8_DB_SRV_PWD}" psql -h "${V8_DB_SRV_ADDR}" -U "${V8_DB_SRV_USR}" -d postgres -c "DROP DATABASE IF EXISTS \"${TMP_IB_NAME}\" WITH (FORCE);"
+V8_DB_SRV_DBMS_LOWER="${V8_DB_SRV_DBMS,,}"
+if [[ "${V8_DB_SRV_DBMS_LOWER}" == *"postgres"* ]]; then
+    PGPASSWORD="${V8_DB_SRV_PWD}" psql -h "${V8_DB_SRV_ADDR}" -U "${V8_DB_SRV_USR}" -d postgres -c "DROP DATABASE IF EXISTS \"${TMP_IB_NAME}\" WITH (FORCE);"
+elif [[ "${V8_DB_SRV_DBMS_LOWER}" == *"mssql"* ]]; then
+    sqlcmd -S "${V8_DB_SRV_ADDR}" -U "${V8_DB_SRV_USR}" -P "${V8_DB_SRV_PWD}" -Q "USE [master]; ALTER DATABASE [${TMP_IB_NAME}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [${TMP_IB_NAME}]" -b -y 0
+else
+    echo "[WARNING] Unknown DBMS type \"${V8_DB_SRV_DBMS}\", skipping database drop"
+fi
 
 echo "[INFO] Looking for temporary infobase \"${V8_SRV_ADDR}/${TMP_IB_NAME}\""
 

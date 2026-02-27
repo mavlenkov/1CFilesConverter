@@ -67,8 +67,8 @@ if [[ "${SRC_EXT,,}" == ".cf" ]]; then
             "${IBCMD_TOOL}" infobase create --data="${IBCMD_DATA}" --db-path="${IB_PATH}" --create-database --load="${V8_SRC_PATH}"
         fi
     fi
-    if [[ $? -ne 0 ]]; then
-        ERROR_CODE=$?
+    ERROR_CODE=$?
+    if [[ ${ERROR_CODE} -ne 0 ]]; then
         cleanup_and_exit
     fi
     NEED_IB=1
@@ -126,8 +126,8 @@ if [[ "${NEED_IB}" == "1" ]]; then
             "${IBCMD_TOOL}" infobase config export --data="${IBCMD_DATA}" --db-path="${IB_PATH}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" ${IBCMD_EXPORT_FLAGS} "${XML_PATH}"
         fi
     fi
-    if [[ $? -ne 0 ]]; then
-        ERROR_CODE=$?
+    ERROR_CODE=$?
+    if [[ ${ERROR_CODE} -ne 0 ]]; then
         cleanup_and_exit
     fi
     NEED_XML=1
@@ -139,8 +139,8 @@ if [[ "${NEED_XML}" == "1" ]]; then
 
     echo "[INFO] Export configuration from \"${XML_PATH}\" to 1C:EDT format \"${V8_DST_PATH}\"..."
     run_edt_import "${XML_PATH}" "${V8_DST_PATH}"
-    if [[ $? -ne 0 ]]; then
-        ERROR_CODE=$?
+    ERROR_CODE=$?
+    if [[ ${ERROR_CODE} -ne 0 ]]; then
         cleanup_and_exit
     fi
 

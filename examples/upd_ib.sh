@@ -79,7 +79,7 @@ if [[ "${V8_CONVERT_TOOL}" != "designer" ]] && [[ "${V8_CONVERT_TOOL}" != "ibcmd
     V8_CONVERT_TOOL="designer"
 fi
 
-V8_CONNECTION_STRING="/S${V8_DB_SRV_ADDR}/${V8_IB_NAME}"
+V8_CONNECTION_STRING="/S${V8_DB_SRV_ADDR}\\${V8_IB_NAME}"
 if [[ "${V8_CONVERT_TOOL,,}" == "designer" ]]; then
     V8_CONNECTION_STRING="/S${V8_SRV_ADDR}/${V8_IB_NAME}"
 fi
@@ -160,7 +160,7 @@ else
     fi
 fi
 
-V8_CONNECTION_STRING="/S${V8_DB_SRV_ADDR}/${V8_IB_NAME}"
+V8_CONNECTION_STRING="/S${V8_DB_SRV_ADDR}\\${V8_IB_NAME}"
 if [[ "${V8_CONVERT_TOOL,,}" == "designer" ]]; then
     V8_CONNECTION_STRING="/S${V8_SRV_ADDR}/${V8_IB_NAME}"
 fi

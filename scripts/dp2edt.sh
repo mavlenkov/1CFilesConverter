@@ -109,9 +109,7 @@ if [[ "${V8_SRC_IS_EDT}" == "1" ]]; then
     mkdir -p "${WS_PATH}"
 
     run_edt_export "${V8_SRC_PATH}" "${V8_DST_PATH}"
-    if [[ $? -ne 0 ]]; then
-        ERROR_CODE=$?
-    fi
+    ERROR_CODE=$?
     cleanup_and_exit
 fi
 
@@ -172,8 +170,8 @@ if [[ "${SRC_EXT,,}" == ".epf" ]] || [[ "${SRC_EXT,,}" == ".erf" ]] || [[ "${V8_
             echo "[INFO] Building ${local_name}..."
             run_designer "${V8_BASE_IB_CONNECTION}" /DumpExternalDataProcessorOrReportToFiles "${XML_PATH}" "${V8_SRC_FOLDER}/${local_file}"
             print_designer_log "${V8_DESIGNER_LOG}"
-            if [[ $? -ne 0 ]]; then
-                ERROR_CODE=$?
+            ERROR_CODE=$?
+            if [[ ${ERROR_CODE} -ne 0 ]]; then
                 cleanup_and_exit
             fi
         done
@@ -183,8 +181,8 @@ if [[ "${SRC_EXT,,}" == ".epf" ]] || [[ "${SRC_EXT,,}" == ".erf" ]] || [[ "${V8_
         echo "[INFO] Building ${local_name}..."
         run_designer "${V8_BASE_IB_CONNECTION}" /DumpExternalDataProcessorOrReportToFiles "${XML_PATH}" "${V8_SRC_FOLDER}/${local_file}"
         print_designer_log "${V8_DESIGNER_LOG}"
-        if [[ $? -ne 0 ]]; then
-            ERROR_CODE=$?
+        ERROR_CODE=$?
+        if [[ ${ERROR_CODE} -ne 0 ]]; then
             cleanup_and_exit
         fi
     fi

@@ -86,9 +86,7 @@ if [[ "${SRC_EXT,,}" == ".cf" ]]; then
             fi
         fi
     fi
-    if [[ $? -ne 0 ]]; then
-        ERROR_CODE=$?
-    fi
+    ERROR_CODE=$?
     if [[ "${ERROR_CODE}" -eq 0 ]]; then
         run_update_db "${V8_IB_CONNECTION}"
         ERROR_CODE=$?
@@ -106,8 +104,8 @@ if [[ -d "${V8_SRC_PATH}/DT-INF" ]]; then
     mkdir -p "${WS_PATH}"
 
     run_edt_export "${V8_SRC_PATH}" "${XML_PATH}"
-    if [[ $? -ne 0 ]]; then
-        ERROR_CODE=$?
+    ERROR_CODE=$?
+    if [[ ${ERROR_CODE} -ne 0 ]]; then
         cleanup_and_exit
     fi
     NEED_XML=1

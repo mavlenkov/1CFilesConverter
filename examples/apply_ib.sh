@@ -52,7 +52,7 @@ if [[ -n "${V8_IMPORT_TOOL+x}" ]]; then
     V8_CONVERT_TOOL="${V8_IMPORT_TOOL}"
 fi
 
-V8_CONNECTION_STRING="/S${V8_DB_SRV_ADDR}/${V8_IB_NAME}"
+V8_CONNECTION_STRING="/S${V8_DB_SRV_ADDR}\\${V8_IB_NAME}"
 if [[ "${V8_CONVERT_TOOL,,}" == "designer" ]]; then
     V8_CONNECTION_STRING="/S${V8_SRV_ADDR}/${V8_IB_NAME}"
 fi
@@ -80,7 +80,7 @@ if [[ "${ERROR_CODE}" == "1" ]]; then
     exit 1
 fi
 
-V8_CONNECTION_STRING="/S${V8_DB_SRV_ADDR}/${V8_IB_NAME}"
+V8_CONNECTION_STRING="/S${V8_DB_SRV_ADDR}\\${V8_IB_NAME}"
 if [[ "${V8_CONVERT_TOOL,,}" == "designer" ]]; then
     V8_CONNECTION_STRING="/S${V8_SRV_ADDR}/${V8_IB_NAME}"
 fi

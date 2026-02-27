@@ -161,8 +161,8 @@ if [[ "${V8_SRC_TYPE}" != "xml" ]]; then
             "${IBCMD_TOOL}" infobase config export --data="${IBCMD_DATA}" --db-path="${IB_PATH}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" ${IBCMD_EXPORT_FLAGS} "${XML_PATH}"
         fi
     fi
-    if [[ $? -ne 0 ]]; then
-        ERROR_CODE=$?
+    ERROR_CODE=$?
+    if [[ ${ERROR_CODE} -ne 0 ]]; then
         cleanup_and_exit
     fi
 fi
@@ -172,8 +172,8 @@ echo "[INFO] Export configuration extension from 1C:Designer XML format \"${XML_
 mkdir -p "${WS_PATH}"
 
 run_edt_import "${XML_PATH}" "${V8_DST_PATH}"
-if [[ $? -ne 0 ]]; then
-    ERROR_CODE=$?
+ERROR_CODE=$?
+if [[ ${ERROR_CODE} -ne 0 ]]; then
     cleanup_and_exit
 fi
 
