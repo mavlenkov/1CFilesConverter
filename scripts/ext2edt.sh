@@ -125,28 +125,20 @@ if [[ "${V8_SRC_TYPE}" == "cfe" ]] || [[ "${V8_SRC_TYPE}" == "xml" ]]; then
         fi
     fi
 
-    # --- load_cfe ---
-    echo "[INFO] Loading configuration extension from file \"${V8_SRC_PATH}\" to infobase \"${IB_PATH}\"..."
-
-    if [[ "${V8_CONVERT_TOOL}" == "designer" ]]; then
-        run_designer "${V8_BASE_IB_CONNECTION}" /LoadCfg "${V8_SRC_PATH}" -Extension "${V8_EXT_NAME}"
-        print_designer_log "${V8_DESIGNER_LOG}"
-    else
-        if [[ -n "${V8_BASE_IB_SERVER:-}" ]]; then
-            "${IBCMD_TOOL}" infobase config load --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_BASE_IB_SERVER}" --db-name="${V8_BASE_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" --force "${V8_SRC_PATH}"
-        else
-            "${IBCMD_TOOL}" infobase config load --data="${IBCMD_DATA}" --db-path="${IB_PATH}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" --force "${V8_SRC_PATH}"
-        fi
-    fi
-
+    # --- load_cfe (only for CFE source, XML goes directly to EDT import) ---
     if [[ "${V8_SRC_TYPE}" == "cfe" ]]; then
-        # Need to export from ib to xml first, then import to EDT
-        # fall through to export_ib
-        :
-    elif [[ "${V8_SRC_TYPE}" == "xml" ]]; then
-        # Skip export_ib, go directly to export_xml (EDT import)
-        # fall through to export_xml
-        :
+        echo "[INFO] Loading configuration extension from file \"${V8_SRC_PATH}\" to infobase \"${IB_PATH}\"..."
+
+        if [[ "${V8_CONVERT_TOOL}" == "designer" ]]; then
+            run_designer "${V8_BASE_IB_CONNECTION}" /LoadCfg "${V8_SRC_PATH}" -Extension "${V8_EXT_NAME}"
+            print_designer_log "${V8_DESIGNER_LOG}"
+        else
+            if [[ -n "${V8_BASE_IB_SERVER:-}" ]]; then
+                "${IBCMD_TOOL}" infobase config load --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_BASE_IB_SERVER}" --db-name="${V8_BASE_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" --force "${V8_SRC_PATH}"
+            else
+                "${IBCMD_TOOL}" infobase config load --data="${IBCMD_DATA}" --db-path="${IB_PATH}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" --force "${V8_SRC_PATH}"
+            fi
+        fi
     fi
 fi
 
