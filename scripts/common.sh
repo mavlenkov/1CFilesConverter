@@ -94,10 +94,16 @@ init_convert_tool() {
     fi
 
     : "${IBCMD_TOOL:=/opt/1cv8/x86_64/${V8_VERSION}/ibcmd}"
-    if [[ "${V8_CONVERT_TOOL}" == "ibcmd" ]] && [[ ! -f "${IBCMD_TOOL}" ]]; then
-        echo "Could not find ibcmd tool with path ${IBCMD_TOOL}"
-        ERROR_CODE=1
-        return 1
+    if [[ "${V8_CONVERT_TOOL}" == "ibcmd" ]]; then
+        if [[ -n "${V8_REMOTE_HOST:-}" ]]; then
+            : "${V8_REMOTE_IBCMD:=C:\\Program Files\\1cv8\\${V8_VERSION}\\bin\\ibcmd.exe}"
+            : "${V8_REMOTE_TEMP:=C:\\Temp\\1c_conv}"
+            echo "[INFO] Using remote ibcmd on ${V8_REMOTE_HOST} (${V8_REMOTE_IBCMD})"
+        elif [[ ! -f "${IBCMD_TOOL}" ]]; then
+            echo "Could not find ibcmd tool with path ${IBCMD_TOOL}"
+            ERROR_CODE=1
+            return 1
+        fi
     fi
 
     echo "[INFO] Start conversion using \"${V8_CONVERT_TOOL}\""
@@ -290,6 +296,106 @@ print_designer_log() {
 }
 
 # ============================================================
+# run_ibcmd - run ibcmd locally or remotely via SSH
+# Usage: run_ibcmd <local_path_or_empty> <ibcmd_args...>
+#   First argument: local file/dir to transfer ("" = none)
+#   Remaining arguments: ibcmd command and options
+#   For "infobase create --load=" / "--import=": path is appended to flag
+#   For other commands: path is appended as last argument
+# ============================================================
+run_ibcmd() {
+    local local_path="${1}"
+    shift
+    local ibcmd_args=("$@")
+
+    # --- Local mode ---
+    if [[ -z "${V8_REMOTE_HOST:-}" ]]; then
+        local final_args=()
+        local path_appended=0
+        for arg in "${ibcmd_args[@]}"; do
+            if [[ -n "${local_path}" ]] && { [[ "${arg}" == "--load=" ]] || [[ "${arg}" == "--import=" ]]; }; then
+                final_args+=("${arg}${local_path}")
+                path_appended=1
+            else
+                final_args+=("${arg}")
+            fi
+        done
+        if [[ -n "${local_path}" ]] && [[ "${path_appended}" -eq 0 ]]; then
+            final_args+=("${local_path}")
+        fi
+        "${IBCMD_TOOL}" "${final_args[@]}"
+        return $?
+    fi
+
+    # --- Remote mode ---
+
+    # Validate local path if provided
+    if [[ -n "${local_path}" ]] && [[ ! -e "${local_path}" ]]; then
+        echo "[ERROR] Local path \"${local_path}\" does not exist"
+        return 1
+    fi
+
+    # Create unique remote working directory
+    local run_id="run-$$-$(date +%Y%m%d%H%M%S)"
+    local remote_workdir="${V8_REMOTE_TEMP}\\${run_id}"
+
+    ssh "${V8_REMOTE_HOST}" "mkdir \"${V8_REMOTE_TEMP}\" 2>nul & mkdir \"${remote_workdir}\"" 2>&1
+    if [[ $? -ne 0 ]]; then
+        echo "[ERROR] Failed to create remote directory \"${remote_workdir}\" on ${V8_REMOTE_HOST}"
+        return 1
+    fi
+
+    # Copy files to remote if needed
+    local remote_path=""
+    if [[ -n "${local_path}" ]]; then
+        local basename
+        basename="$(basename "${local_path}")"
+        remote_path="${remote_workdir}\\${basename}"
+
+        local scp_args=()
+        [[ -d "${local_path}" ]] && scp_args+=("-r")
+
+        scp "${scp_args[@]}" "${local_path}" "${V8_REMOTE_HOST}:${remote_workdir}\\" 2>&1
+        if [[ $? -ne 0 ]]; then
+            echo "[ERROR] Failed to copy files to remote host ${V8_REMOTE_HOST}"
+            ssh "${V8_REMOTE_HOST}" "rmdir /s /q \"${remote_workdir}\"" 2>/dev/null
+            return 1
+        fi
+    fi
+
+    # Build ibcmd arguments with remote paths
+    local final_args=()
+    local path_appended=0
+    for arg in "${ibcmd_args[@]}"; do
+        if [[ "${arg}" == --data=* ]]; then
+            final_args+=("--data=${remote_workdir}\\ibcmd_data")
+        elif [[ -n "${remote_path}" ]] && { [[ "${arg}" == "--load=" ]] || [[ "${arg}" == "--import=" ]]; }; then
+            final_args+=("${arg}${remote_path}")
+            path_appended=1
+        else
+            final_args+=("${arg}")
+        fi
+    done
+    if [[ -n "${remote_path}" ]] && [[ "${path_appended}" -eq 0 ]]; then
+        final_args+=("${remote_path}")
+    fi
+
+    # Build SSH command for cmd.exe
+    local ssh_cmd="chcp 65001 >nul & \"${V8_REMOTE_IBCMD}\""
+    for arg in "${final_args[@]}"; do
+        ssh_cmd+=" ${arg}"
+    done
+
+    ssh "${V8_REMOTE_HOST}" "${ssh_cmd}" 2>&1
+    local ibcmd_rc=$?
+
+    # Cleanup remote working directory
+    ssh "${V8_REMOTE_HOST}" "rmdir /s /q \"${remote_workdir}\"" 2>/dev/null
+
+    return ${ibcmd_rc}
+}
+
+# ============================================================
 # run_update_db - update database configuration
 # Usage: run_update_db <connection_string> [extension_name]
 # Runs only if V8_UPDATE_DB=1
@@ -311,13 +417,13 @@ run_update_db() {
     else
         local ibcmd_args=()
         if [[ -n "${V8_IB_SERVER:-}" ]]; then
-            ibcmd_args+=(--data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_IB_SERVER}" --db-name="${V8_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}")
+            ibcmd_args+=(--data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}")
         else
             ibcmd_args+=(--data="${IBCMD_DATA}" --db-path="${IB_PATH}")
         fi
         ibcmd_args+=(--user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}")
         [[ -n "${ext_name}" ]] && ibcmd_args+=(--extension="${ext_name}")
-        "${IBCMD_TOOL}" infobase config apply "${ibcmd_args[@]}"
+        run_ibcmd "" infobase config apply "${ibcmd_args[@]}"
     fi
 
     local update_rc=$?
@@ -376,6 +482,7 @@ parse_dst_ib_path() {
         IB_PATH="${V8_IB_SERVER}\\${V8_IB_NAME}"
         V8_IB_CONNECTION="Srvr=\"${V8_IB_SERVER}\";Ref=\"${V8_IB_NAME}\";"
         : "${V8_DB_SRV_DBMS:=MSSQLServer}"
+        : "${V8_DB_SRV_ADDR:=${V8_IB_SERVER}}"
         return 0
     fi
     IB_PATH="${dst_path}"
@@ -430,6 +537,7 @@ parse_src_ib_path() {
         IB_PATH="${V8_IB_SERVER}\\${V8_IB_NAME}"
         eval "${conn_var}=\"Srvr=\\\"${V8_IB_SERVER}\\\";Ref=\\\"${V8_IB_NAME}\\\";\""
         : "${V8_DB_SRV_DBMS:=MSSQLServer}"
+        : "${V8_DB_SRV_ADDR:=${V8_IB_SERVER}}"
         return 0
     fi
     if is_file_ib "${src_path}"; then
@@ -475,6 +583,7 @@ parse_base_ib() {
         echo "[INFO] Basic infobase type: Server infobase (${V8_BASE_IB_SERVER}\\${V8_BASE_IB_NAME})"
         V8_BASE_IB_CONNECTION="Srvr=\"${V8_BASE_IB_SERVER}\";Ref=\"${V8_BASE_IB_NAME}\";"
         : "${V8_DB_SRV_DBMS:=MSSQLServer}"
+        : "${V8_DB_SRV_ADDR:=${V8_BASE_IB_SERVER}}"
         return 0
     fi
     if is_file_ib "${base_ib}"; then

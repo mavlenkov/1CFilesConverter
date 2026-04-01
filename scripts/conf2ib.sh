@@ -71,10 +71,10 @@ if [[ "${SRC_EXT,,}" == ".cf" ]]; then
         if [[ -n "${V8_IB_SERVER:-}" ]]; then
             if [[ "${V8_IB_CREATE}" == "1" ]]; then
                 echo "[INFO] Creating infobase \"${IB_PATH}\" from file \"${V8_SRC_PATH}\"..."
-                "${IBCMD_TOOL}" infobase create --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_IB_SERVER}" --db-name="${V8_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --create-database --load="${V8_SRC_PATH}"
+                run_ibcmd "${V8_SRC_PATH}" infobase create --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --create-database --load=
             else
                 echo "[INFO] Loading infobase \"${IB_PATH}\" configuration from file \"${V8_SRC_PATH}\"..."
-                "${IBCMD_TOOL}" infobase config load --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_IB_SERVER}" --db-name="${V8_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" "${V8_SRC_PATH}"
+                run_ibcmd "${V8_SRC_PATH}" infobase config load --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}"
             fi
         else
             if [[ "${V8_IB_CREATE}" == "1" ]]; then
@@ -135,10 +135,10 @@ if [[ "${NEED_XML}" == "1" ]]; then
         if [[ -n "${V8_IB_SERVER:-}" ]]; then
             if [[ "${V8_IB_CREATE}" == "1" ]]; then
                 echo "[INFO] Creating infobase \"${IB_PATH}\" from XML-files \"${XML_PATH}\"..."
-                "${IBCMD_TOOL}" infobase create --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_IB_SERVER}" --db-name="${V8_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --create-database --import="${XML_PATH}"
+                run_ibcmd "${XML_PATH}" infobase create --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --create-database --import=
             else
                 echo "[INFO] Loading infobase \"${IB_PATH}\" configuration from XML-files \"${XML_PATH}\"..."
-                "${IBCMD_TOOL}" infobase config import --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_IB_SERVER}" --db-name="${V8_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" "${XML_PATH}"
+                run_ibcmd "${XML_PATH}" infobase config import --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}"
             fi
         else
             if [[ "${V8_IB_CREATE}" == "1" ]]; then
