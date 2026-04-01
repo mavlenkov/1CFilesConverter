@@ -423,7 +423,7 @@ run_update_db() {
         fi
         ibcmd_args+=(--user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}")
         [[ -n "${ext_name}" ]] && ibcmd_args+=(--extension="${ext_name}")
-        run_ibcmd "" infobase config apply "${ibcmd_args[@]}"
+        run_ibcmd "" infobase config apply --force "${ibcmd_args[@]}"
     fi
 
     local update_rc=$?
