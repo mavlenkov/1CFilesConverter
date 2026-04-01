@@ -17,9 +17,6 @@ init_temp_paths
 # Parse arguments
 V8_SRC_PATH="${V8_SRC_PATH:-${1:-}}"
 V8_DST_PATH="${V8_DST_PATH:-${2:-}}"
-if [[ -n "${V8_DST_PATH}" ]]; then
-    V8_DST_FOLDER="$(dirname "${V8_DST_PATH}")"
-fi
 V8_EXT_NAME="${V8_EXT_NAME:-${3:-}}"
 
 # Validate
@@ -53,8 +50,6 @@ fi
 echo "[INFO] Clear temporary files..."
 [[ -d "${LOCAL_TEMP}" ]] && rm -rf "${LOCAL_TEMP}"
 mkdir -p "${LOCAL_TEMP}"
-[[ -n "${V8_DST_FOLDER:-}" ]] && [[ ! -d "${V8_DST_FOLDER}" ]] && mkdir -p "${V8_DST_FOLDER}"
-
 echo "[INFO] Checking extension ${V8_DST_PATH} destination type..."
 
 # Parse destination infobase
