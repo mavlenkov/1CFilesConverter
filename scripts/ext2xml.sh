@@ -134,7 +134,7 @@ if [[ "${V8_SRC_TYPE}" == "cfe" ]] || [[ "${V8_SRC_TYPE}" == "edt" ]]; then
             print_designer_log "${V8_DESIGNER_LOG}"
         else
             if [[ -n "${V8_BASE_IB_SERVER:-}" ]]; then
-                "${IBCMD_TOOL}" infobase config load --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_BASE_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" --force "${V8_SRC_PATH}"
+                "${IBCMD_TOOL}" infobase config load --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_DB_NAME:-${V8_BASE_IB_NAME}}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" --force "${V8_SRC_PATH}"
             else
                 "${IBCMD_TOOL}" infobase config load --data="${IBCMD_DATA}" --db-path="${IB_PATH}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" --force "${V8_SRC_PATH}"
             fi
@@ -164,7 +164,7 @@ else
         IBCMD_EXPORT_FLAGS="${IBCMD_EXPORT_FLAGS} --sync"
     fi
     if [[ -n "${V8_BASE_IB_SERVER:-}" ]]; then
-        "${IBCMD_TOOL}" infobase config export --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_BASE_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" ${IBCMD_EXPORT_FLAGS} "${V8_DST_PATH}"
+        "${IBCMD_TOOL}" infobase config export --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_DB_NAME:-${V8_BASE_IB_NAME}}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" ${IBCMD_EXPORT_FLAGS} "${V8_DST_PATH}"
     else
         "${IBCMD_TOOL}" infobase config export --data="${IBCMD_DATA}" --db-path="${IB_PATH}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" ${IBCMD_EXPORT_FLAGS} "${V8_DST_PATH}"
     fi

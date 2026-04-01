@@ -105,7 +105,7 @@ if [[ -d "${V8_SRC_PATH}/DT-INF" ]] && [[ -f "${V8_SRC_PATH}/src/Configuration/C
             print_designer_log "${V8_DESIGNER_LOG}"
         else
             if [[ -n "${V8_IB_SERVER:-}" ]]; then
-                run_ibcmd "${XML_PATH}" infobase config import --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}"
+                run_ibcmd "${XML_PATH}" infobase config import --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_DB_NAME:-${V8_IB_NAME}}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}"
             else
                 "${IBCMD_TOOL}" infobase config import --data="${IBCMD_DATA}" --db-path="${IB_PATH}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" "${XML_PATH}"
             fi
@@ -131,7 +131,7 @@ if [[ -f "${V8_SRC_PATH}/Configuration.xml" ]]; then
             print_designer_log "${V8_DESIGNER_LOG}"
         else
             if [[ -n "${V8_IB_SERVER:-}" ]]; then
-                run_ibcmd "${XML_PATH}" infobase config import --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}"
+                run_ibcmd "${XML_PATH}" infobase config import --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_DB_NAME:-${V8_IB_NAME}}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}"
             else
                 "${IBCMD_TOOL}" infobase config import --data="${IBCMD_DATA}" --db-path="${IB_PATH}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" "${XML_PATH}"
             fi
@@ -157,7 +157,7 @@ if [[ "${SRC_EXT,,}" == ".cfe" ]]; then
         print_designer_log "${V8_DESIGNER_LOG}"
     else
         if [[ -n "${V8_IB_SERVER:-}" ]]; then
-            run_ibcmd "${V8_SRC_PATH}" infobase config load --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" --force
+            run_ibcmd "${V8_SRC_PATH}" infobase config load --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_DB_NAME:-${V8_IB_NAME}}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" --force
         else
             "${IBCMD_TOOL}" infobase config load --data="${IBCMD_DATA}" --db-path="${IB_PATH}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" --force "${V8_SRC_PATH}"
         fi

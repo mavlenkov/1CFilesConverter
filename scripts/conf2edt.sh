@@ -62,7 +62,7 @@ if [[ "${SRC_EXT,,}" == ".cf" ]]; then
         "${V8_TOOL}" CREATEINFOBASE "${V8_IB_CONNECTION}" /DisableStartupDialogs /Out "${V8_DESIGNER_LOG}" /UseTemplate "${V8_SRC_PATH}"
     else
         if [[ -n "${V8_IB_SERVER:-}" ]]; then
-            "${IBCMD_TOOL}" infobase create --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS:-MSSQLServer}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --create-database --load="${V8_SRC_PATH}"
+            "${IBCMD_TOOL}" infobase create --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS:-MSSQLServer}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_DB_NAME:-${V8_IB_NAME}}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --create-database --load="${V8_SRC_PATH}"
         else
             "${IBCMD_TOOL}" infobase create --data="${IBCMD_DATA}" --db-path="${IB_PATH}" --create-database --load="${V8_SRC_PATH}"
         fi
@@ -122,7 +122,7 @@ if [[ "${NEED_IB}" == "1" ]]; then
             IBCMD_EXPORT_FLAGS="${IBCMD_EXPORT_FLAGS} --sync"
         fi
         if [[ -n "${V8_IB_SERVER:-}" ]]; then
-            "${IBCMD_TOOL}" infobase config export --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" ${IBCMD_EXPORT_FLAGS} "${XML_PATH}"
+            "${IBCMD_TOOL}" infobase config export --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_DB_NAME:-${V8_IB_NAME}}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" ${IBCMD_EXPORT_FLAGS} "${XML_PATH}"
         else
             "${IBCMD_TOOL}" infobase config export --data="${IBCMD_DATA}" --db-path="${IB_PATH}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" ${IBCMD_EXPORT_FLAGS} "${XML_PATH}"
         fi

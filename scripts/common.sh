@@ -417,7 +417,7 @@ run_update_db() {
     else
         local ibcmd_args=()
         if [[ -n "${V8_IB_SERVER:-}" ]]; then
-            ibcmd_args+=(--data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}")
+            ibcmd_args+=(--data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_DB_NAME:-${V8_IB_NAME}}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}")
         else
             ibcmd_args+=(--data="${IBCMD_DATA}" --db-path="${IB_PATH}")
         fi

@@ -149,7 +149,7 @@ if [[ "${V8_SRC_TYPE}" == "edt" ]] || [[ "${V8_SRC_TYPE}" == "xml" ]]; then
         print_designer_log "${V8_DESIGNER_LOG}"
     else
         if [[ -n "${V8_BASE_IB_SERVER:-}" ]]; then
-            "${IBCMD_TOOL}" infobase config import --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_BASE_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" "${XML_PATH}"
+            "${IBCMD_TOOL}" infobase config import --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_DB_NAME:-${V8_BASE_IB_NAME}}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" "${XML_PATH}"
         else
             "${IBCMD_TOOL}" infobase config import --data="${IBCMD_DATA}" --db-path="${IB_PATH}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" "${XML_PATH}"
         fi
@@ -167,7 +167,7 @@ if [[ "${V8_CONVERT_TOOL}" == "designer" ]]; then
     print_designer_log "${V8_DESIGNER_LOG}"
 else
     if [[ -n "${V8_BASE_IB_SERVER:-}" ]]; then
-        "${IBCMD_TOOL}" infobase config save --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_BASE_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" "${V8_DST_PATH}"
+        "${IBCMD_TOOL}" infobase config save --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_DB_NAME:-${V8_BASE_IB_NAME}}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" "${V8_DST_PATH}"
     else
         "${IBCMD_TOOL}" infobase config save --data="${IBCMD_DATA}" --db-path="${IB_PATH}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" --extension="${V8_EXT_NAME}" "${V8_DST_PATH}"
     fi
