@@ -85,6 +85,7 @@ else
         IB_PATH="${V8_IB_SERVER}\\${V8_IB_NAME}"
         V8_IB_CONNECTION="Srvr=\"${V8_IB_SERVER}\";Ref=\"${V8_IB_NAME}\";"
         : "${V8_DB_SRV_DBMS:=MSSQLServer}"
+        : "${V8_DB_SRV_ADDR:=${V8_IB_SERVER}}"
         NEED_IB=1
     elif is_file_ib "${V8_SRC_PATH}"; then
         echo "[INFO] Source type: File infobase (${V8_SRC_PATH})"
@@ -130,7 +131,7 @@ if [[ "${NEED_IB}" == "1" ]]; then
         print_designer_log "${V8_DESIGNER_LOG}"
     else
         if [[ -n "${V8_IB_SERVER:-}" ]]; then
-            "${IBCMD_TOOL}" infobase config save --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_IB_SERVER}" --db-name="${V8_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" "${V8_DST_PATH}"
+            "${IBCMD_TOOL}" infobase config save --data="${IBCMD_DATA}" --dbms="${V8_DB_SRV_DBMS}" --db-server="${V8_DB_SRV_ADDR}" --db-name="${V8_IB_NAME}" --db-user="${V8_DB_SRV_USR:-}" --db-pwd="${V8_DB_SRV_PWD:-}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" "${V8_DST_PATH}"
         else
             "${IBCMD_TOOL}" infobase config save --data="${IBCMD_DATA}" --db-path="${IB_PATH}" --user="${V8_IB_USER:-}" --password="${V8_IB_PWD:-}" "${V8_DST_PATH}"
         fi
